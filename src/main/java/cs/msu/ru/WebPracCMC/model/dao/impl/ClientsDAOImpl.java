@@ -23,6 +23,7 @@ public class ClientsDAOImpl extends GenericDAOImpl<Clients>
     @Override
     public Collection<Clients> getClientsByFilter(Filter filter) {
         try (Session session = openSession()) {
+            session.beginTransaction();
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<Clients> criteriaQuery = builder.createQuery(Clients.class);
             Root<Clients> root = criteriaQuery.from(Clients.class);

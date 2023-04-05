@@ -15,7 +15,7 @@ public class Airlines {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "airline_id", nullable = false, columnDefinition = "serial")
-    private Integer id;
+    private Integer airlineId;
 
     @Column(name = "airline_name", nullable = false)
     @NonNull

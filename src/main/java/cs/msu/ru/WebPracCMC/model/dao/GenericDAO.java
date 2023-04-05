@@ -8,5 +8,6 @@ public interface GenericDAO<GenericEntity> {
     void update(GenericEntity entity);
     void delete(GenericEntity entity);
     GenericEntity getById(Integer id);
+    Collection<GenericEntity> getAll();
     void deleteById(Integer id);
 }

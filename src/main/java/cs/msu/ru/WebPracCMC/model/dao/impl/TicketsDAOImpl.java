@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,6 +23,7 @@ public class TicketsDAOImpl extends GenericDAOImpl<Tickets>
     @Override
     public Collection<Tickets> getTicketsByFilter(TicketsDAO.Filter filter) {
         try (Session session = openSession()) {
+            session.beginTransaction();
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<Tickets> criteriaQuery = builder.createQuery(Tickets.class);
             Root<Tickets> root = criteriaQuery.from(Tickets.class);
@@ -34,11 +36,6 @@ public class TicketsDAOImpl extends GenericDAOImpl<Tickets>
             if (filter.getFlightId() != null) {
                 predicates.add(builder.equal(root.get("flightId"), filter.getFlightId()));
             }
-            if (filter.getDepartureDate() != null) {
-                var start = filter.getDepartureDate().atStartOfDay();
-                var end = start.plusDays(1);
-                predicates.add(builder.between(root.get("departure_time"), start, end));
-            }
 
             if (!predicates.isEmpty()) {
                 criteriaQuery.where(predicates.toArray(new Predicate[0]));
@@ -46,6 +43,20 @@ public class TicketsDAOImpl extends GenericDAOImpl<Tickets>
 
             List<Tickets> result = session.createQuery(criteriaQuery).getResultList();
             session.getTransaction().commit();
+
+            if (filter.getDepartureDate() != null) {
+                var start = filter.getDepartureDate().atStartOfDay();
+                var end = start.plusDays(1);
+                List<Tickets> filteredResult = new ArrayList<>();
+                for (Tickets ticket: result) {
+                    LocalDateTime departureTime = ticket.getFlightId().getDepartureTime();
+                    if (departureTime.isAfter(start) && departureTime.isBefore(end)) {
+                        filteredResult.add(ticket);
+                    }
+                }
+                result = filteredResult;
+            }
+
             return result;
         }
     }

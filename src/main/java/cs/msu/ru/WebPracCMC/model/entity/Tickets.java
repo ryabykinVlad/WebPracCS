@@ -14,16 +14,18 @@ public class Tickets {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ticket_id", nullable = false, columnDefinition = "serial")
-    private Integer id;
+    private Integer ticketId;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "client_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "client_id")
     @ToString.Exclude
+    @NonNull
     private Clients clientId;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "flight_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "flight_id")
     @ToString.Exclude
+    @NonNull
     private Flights flightId;
 
     @Column(name = "purchase_price", nullable = false, columnDefinition = "numeric")

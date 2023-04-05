@@ -2,14 +2,10 @@ package cs.msu.ru.WebPracCMC.model.dao.impl;
 
 import cs.msu.ru.WebPracCMC.model.dao.FlightsDAO;
 import cs.msu.ru.WebPracCMC.model.entity.Flights;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,37 +19,44 @@ public class FlightsDAOImpl extends GenericDAOImpl<Flights>
 
     @Override
     public Collection<Flights> getFlightsByFilter(Filter filter) {
-        try (Session session = openSession()) {
-            CriteriaBuilder builder = session.getCriteriaBuilder();
-            CriteriaQuery<Flights> criteriaQuery = builder.createQuery(Flights.class);
-            Root<Flights> root = criteriaQuery.from(Flights.class);
-
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (filter.getDepartureAirport() != null && !filter.getDepartureAirport().isBlank()) {
-                String pattern = getPattern(filter.getDepartureAirport());
-                predicates.add(builder.like(root.get("airportName"), pattern));
+        List<Flights> result = this.getAll().stream().toList();
+        if (filter.getDepartureDate() != null) {
+            var start = filter.getDepartureDate().atStartOfDay();
+            var end = start.plusDays(1);
+            List<Flights> filteredResult = new ArrayList<>();
+            for (Flights flight: result) {
+                LocalDateTime departureTime = flight.getDepartureTime();
+                if (departureTime.isAfter(start) && departureTime.isBefore(end)) {
+                    filteredResult.add(flight);
+                }
             }
-            if (filter.getArrivalAirport() != null && !filter.getArrivalAirport().isBlank()) {
-                String pattern = getPattern(filter.getArrivalAirport());
-                predicates.add(builder.like(root.get("airportName"), pattern));
-            }
-            if (filter.getDepartureDate() != null) {
-                var start = filter.getDepartureDate().atStartOfDay();
-                var end = start.plusDays(1);
-                predicates.add(builder.between(root.get("departure_time"), start, end));
-            }
-
-            if (!predicates.isEmpty()) {
-                criteriaQuery.where(predicates.toArray(new Predicate[0]));
-            }
-
-            List<Flights> result = session.createQuery(criteriaQuery).getResultList();
-            session.getTransaction().commit();
-            return result;
+            result = filteredResult;
         }
-    }
-    private String getPattern(String string) {
-        return "%" + string + "%";
+
+        if (filter.getDepartureAirport() != null && !filter.getDepartureAirport().isBlank()) {
+            List<Flights> filteredResult = new ArrayList<>();
+            for (Flights flight: result) {
+                String departureAirportName = flight.getDepartureAirportId().getAirportName().toLowerCase();
+                String departureIataCode = flight.getDepartureAirportId().getIataCode().toLowerCase();
+                if (departureAirportName.contains(filter.getDepartureAirport().toLowerCase()) ||
+                        departureIataCode.contains(filter.getDepartureAirport().toLowerCase())) {
+                    filteredResult.add(flight);
+                }
+            }
+            result = filteredResult;
+        }
+        if (filter.getArrivalAirport() != null && !filter.getArrivalAirport().isBlank()) {
+            List<Flights> filteredResult = new ArrayList<>();
+            for (Flights flight: result) {
+                String arrivalAirportName = flight.getArrivalAirportId().getAirportName().toLowerCase();
+                String arrivalIataCode = flight.getArrivalAirportId().getIataCode().toLowerCase();
+                if (arrivalAirportName.contains(filter.getArrivalAirport().toLowerCase()) ||
+                        arrivalIataCode.contains(filter.getArrivalAirport().toLowerCase())) {
+                    filteredResult.add(flight);
+                }
+            }
+            result = filteredResult;
+        }
+        return result;
     }
 }
