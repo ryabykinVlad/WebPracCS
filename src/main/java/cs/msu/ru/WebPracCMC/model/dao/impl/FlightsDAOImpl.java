@@ -38,8 +38,12 @@ public class FlightsDAOImpl extends GenericDAOImpl<Flights>
             for (Flights flight: result) {
                 String departureAirportName = flight.getDepartureAirportId().getAirportName().toLowerCase();
                 String departureIataCode = flight.getDepartureAirportId().getIataCode().toLowerCase();
+                String departureCityName = flight.getDepartureAirportId().getAirportCity().toLowerCase();
+                String departureCountryName = flight.getDepartureAirportId().getAirportCountry().toLowerCase();
                 if (departureAirportName.contains(filter.getDepartureAirport().toLowerCase()) ||
-                        departureIataCode.contains(filter.getDepartureAirport().toLowerCase())) {
+                        departureIataCode.contains(filter.getDepartureAirport().toLowerCase()) ||
+                        departureCityName.contains(filter.getDepartureAirport().toLowerCase()) ||
+                        departureCountryName.contains(filter.getDepartureAirport().toLowerCase())) {
                     filteredResult.add(flight);
                 }
             }
@@ -50,8 +54,12 @@ public class FlightsDAOImpl extends GenericDAOImpl<Flights>
             for (Flights flight: result) {
                 String arrivalAirportName = flight.getArrivalAirportId().getAirportName().toLowerCase();
                 String arrivalIataCode = flight.getArrivalAirportId().getIataCode().toLowerCase();
+                String arrivalCityName = flight.getArrivalAirportId().getAirportCity().toLowerCase();
+                String arrivalCountryName = flight.getArrivalAirportId().getAirportCountry().toLowerCase();
                 if (arrivalAirportName.contains(filter.getArrivalAirport().toLowerCase()) ||
-                        arrivalIataCode.contains(filter.getArrivalAirport().toLowerCase())) {
+                        arrivalIataCode.contains(filter.getArrivalAirport().toLowerCase()) ||
+                        arrivalCityName.contains(filter.getArrivalAirport().toLowerCase()) ||
+                        arrivalCountryName.contains(filter.getArrivalAirport().toLowerCase())) {
                     filteredResult.add(flight);
                 }
             }

@@ -22,36 +22,30 @@
       <div class="col-3">
         <form th:action="${action}" method="post">
           <div class="mb-3">
-            <label for="airlineId" class="form-label">Id авиакомпании</label>
-            <input type="number" class="form-control" id="airlineId" name="airlineId">
+            <input type="number" class="form-control" id="airlineId" name="airlineId" placeholder="Id авиакомпании">
           </div>
           <div class="mb-3">
-            <label for="departureAirportId" class="form-label">Id аэропорта вылета</label>
-            <input type="number" class="form-control" id="departureAirportId" name="departureAirportId">
+            <input type="number" class="form-control" id="departureAirportId" name="departureAirportId" placeholder="Id аэропорта вылета">
           </div>
           <div class="mb-3">
-            <label for="arrivalAirportId" class="form-label">Id аэропорта прилёта</label>
-            <input type="number" class="form-control" id="arrivalAirportId" name="arrivalAirportId">
+            <input type="number" class="form-control" id="arrivalAirportId" name="arrivalAirportId" placeholder="Id аэропорта прилёта">
           </div>
           <div class="mb-3">
             <label for="departureTime" class="form-label">Время вылета</label>
-            <input type="datetime-local" class="form-control" id="departureTime" name="departureTime">
+            <input type="datetime-local" class="form-control" id="departureTime" name="departureTime" placeholder="Время вылета">
           </div>
           <div class="mb-3">
             <label for="arrivalTime" class="form-label">Время прилёта</label>
-            <input type="datetime-local" class="form-control" id="arrivalTime" name="arrivalTime">
+            <input type="datetime-local" class="form-control" id="arrivalTime" name="arrivalTime" placeholder="Время прилёта">
           </div>
           <div class="mb-3">
-            <label for="currentPrice" class="form-label">Цена билета</label>
-            <input type="number" class="form-control" id="currentPrice" name="currentPrice">
+            <input type="number" class="form-control" id="currentPrice" name="currentPrice" placeholder="Цена билета">
           </div>
           <div class="mb-3">
-            <label for="availableSeats" class="form-label">Осталось мест</label>
-            <input type="number" class="form-control" id="availableSeats" name="availableSeats">
+            <input type="number" class="form-control" id="availableSeats" name="availableSeats" placeholder="Осталось мест">
           </div>
           <div class="mb-3">
-            <label for="totalSeats" class="form-label">Всего мест</label>
-            <input type="number" class="form-control" id="totalSeats" name="totalSeats">
+            <input type="number" class="form-control" id="totalSeats" name="totalSeats" placeholder="Всего мест">
           </div>
           <button class="btn btn-lg btn-primary" type="submit">Добавить</button>
         </form>

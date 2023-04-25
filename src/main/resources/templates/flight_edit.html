@@ -22,36 +22,36 @@
             <div class="col-3">
                 <form th:action="${action}" method="post">
                     <div class="mb-3">
-                        <label for="airlineId" class="form-label">Id авиакомпании</label>
-                        <input type="number" class="form-control" id="airlineId" name="airlineId">
+                        <label for="airlineId" class="form-label">ID авиакомпании</label>
+                        <input type="number" class="form-control" id="airlineId" name="airlineId" th:placeholder="${flight.getAirlineId().getAirlineId().toString()}">
                     </div>
                     <div class="mb-3">
-                        <label for="departureAirportId" class="form-label">Id аэропорта вылета</label>
-                        <input type="number" class="form-control" id="departureAirportId" name="departureAirportId">
+                        <label for="departureAirportId" class="form-label">ID аэропорта вылета</label>
+                        <input type="number" class="form-control" id="departureAirportId" name="departureAirportId" th:placeholder="${flight.getDepartureAirportId().getAirportId().toString()}">
                     </div>
                     <div class="mb-3">
-                        <label for="arrivalAirportId" class="form-label">Id аэропорта прилёта</label>
-                        <input type="number" class="form-control" id="arrivalAirportId" name="arrivalAirportId">
+                        <label for="arrivalAirportId" class="form-label">ID аэропорта прилёта</label>
+                        <input type="number" class="form-control" id="arrivalAirportId" name="arrivalAirportId" th:placeholder="${flight.getArrivalAirportId().getAirportId().toString()}">
                     </div>
                     <div class="mb-3">
                         <label for="departureTime" class="form-label">Время вылета</label>
-                        <input type="datetime-local" class="form-control" id="departureTime" name="departureTime">
+                        <input type="datetime-local" class="form-control" id="departureTime" name="departureTime" placeholder="Время вылета">
                     </div>
                     <div class="mb-3">
                         <label for="arrivalTime" class="form-label">Время прилёта</label>
-                        <input type="datetime-local" class="form-control" id="arrivalTime" name="arrivalTime">
+                        <input type="datetime-local" class="form-control" id="arrivalTime" name="arrivalTime" placeholder="Время прилёта">
                     </div>
                     <div class="mb-3">
                         <label for="currentPrice" class="form-label">Цена билета</label>
-                        <input type="number" class="form-control" id="currentPrice" name="currentPrice">
+                        <input type="number" class="form-control" id="currentPrice" name="currentPrice" th:placeholder="${flight.getCurrentPrice().toString()}">
                     </div>
                     <div class="mb-3">
-                        <label for="availableSeats" class="form-label">Осталось мест</label>
-                        <input type="number" class="form-control" id="availableSeats" name="availableSeats">
+                        <label for="availableSeats" class="form-label">Количество свободных мест</label>
+                        <input type="number" class="form-control" id="availableSeats" name="availableSeats" th:placeholder="${flight.getAvailableSeats().toString()}">
                     </div>
                     <div class="mb-3">
-                        <label for="totalSeats" class="form-label">Всего мест</label>
-                        <input type="number" class="form-control" id="totalSeats" name="totalSeats">
+                        <label for="totalSeats" class="form-label">Общее количество мест</label>
+                        <input type="number" class="form-control" id="totalSeats" name="totalSeats" th:placeholder="${flight.getTotalSeats().toString()}">
                     </div>
                     <button class="btn btn-lg btn-primary" type="submit">Редактировать</button>
                 </form>

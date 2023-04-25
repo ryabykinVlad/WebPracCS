@@ -7,11 +7,12 @@ import cs.msu.ru.WebPracCMC.model.dao.impl.AirlinesDAOImpl;
 import cs.msu.ru.WebPracCMC.model.dao.impl.AirportsDAOImpl;
 import cs.msu.ru.WebPracCMC.model.dao.impl.FlightsDAOImpl;
 import cs.msu.ru.WebPracCMC.model.entity.Flights;
-import org.springframework.beans.factory.annotation.Autowired;s
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
@@ -25,10 +26,38 @@ public class FlightsController {
     private final AirlinesDAO airlinesDAO = new AirlinesDAOImpl();
 
     @GetMapping(value = {"/", "/flights"})
-    public String flights_page(Model model) {
+    public String flights_page(Model model,
+                               @RequestParam(name = "departureAirport", required = false) String departureAirport,
+                               @RequestParam(name = "arrivalAirport", required = false) String arrivalAirport,
+                               @RequestParam(name = "departureDate", required = false) String departureDate) {
         Collection<Flights> flights = flightsDAO.getAll();
+        var filterBuilder = FlightsDAO.getFilterBuilder();
+        boolean flag = false;
+        if (departureAirport != null && !departureAirport.isEmpty()) {
+            filterBuilder.departureAirport(departureAirport.toLowerCase());
+            flag = true;
+        }
+        if (arrivalAirport != null && !arrivalAirport.isEmpty()) {
+            filterBuilder.arrivalAirport(arrivalAirport.toLowerCase());
+            flag = true;
+        }
+        if (departureDate != null && !departureDate.isEmpty()) {
+            filterBuilder.departureDate(LocalDate.parse(departureDate));
+            flag = true;
+        }
+        if (flag) {
+            flights = flightsDAO.getFlightsByFilter(filterBuilder.build());
+        }
         model.addAttribute("flights", flights);
+        model.addAttribute("action", "/flights");
         return "flights";
+    }
+
+    @GetMapping("/flights/{id}")
+    public String flight_page(@PathVariable(name = "id") Integer flightId, Model model) {
+        Flights flight = flightsDAO.getById(flightId);
+        model.addAttribute("flight", flight);
+        return "flight";
     }
 
     @GetMapping("/flights/add/")
@@ -66,6 +95,8 @@ public class FlightsController {
 
     @GetMapping("/flights/edit/{id}")
     public String edit_flight_page(@PathVariable(name = "id") Integer flightId, Model model) {
+        Flights flight = flightsDAO.getById(flightId);
+        model.addAttribute("flight", flight);
         model.addAttribute("action", "/flights/edit/" + flightId.toString());
         return "flight_edit";
     }
