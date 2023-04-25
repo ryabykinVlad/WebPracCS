@@ -49,7 +49,7 @@
                     <div th:each="flight : ${flights}" class="accordion-item">
                         <h2 class="accordion-header" th:id="'flightheader-' + ${flight.getFlightId()}">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"
+                                    data-bs-target="#collapse-${flight.getFlightId()}" aria-expanded="true" aria-controls="collapseOne"
                                     th:text="'ID: ' + ${flight.getFlightId()}">
                             </button>
                         </h2>
@@ -64,18 +64,21 @@
                                     <li class="list-group-item" th:text="'Стоимость полета: ' + ${flight.getCurrentPrice()}"></li>
                                     <li class="list-group-item" th:text="'Количество свободных мест: ' + ${flight.getAvailableSeats()}"></li>
                                 </ul>
-                                <form action="#" th:action="'/flights/' + ${flight.getFlightId()}" th:method="get">
-                                    <button type="submit" class="btn btn-md btn-info" value="Подробнее">Подробнее</button>
-                                </form>
-                                <form action="#" th:action="'/tickets/add/' + ${flight.getFlightId()}" th:method="get">
-                                    <button type="submit" class="btn btn-md btn-success" value="Купить">Купить</button>
-                                </form>
-                                <a th:href="'/flights/edit/' + ${flight.getFlightId()}">
-                                    <button class="btn btn-md btn-warning" th:text="Редактировать"></button>
-                                </a>
-                                <form action="#" th:action="'/flights/delete/' + ${flight.getFlightId()}" th:method="delete">
-                                    <button type="submit" class="btn btn-md btn-danger" value="Удалить">Удалить</button>
-                                </form>
+
+                                <div class="d-flex">
+                                    <form action="#" th:action="'/flights/' + ${flight.getFlightId()}" th:method="get">
+                                        <button type="submit" class="btn btn-md btn-info" value="Подробнее">Подробнее</button>
+                                    </form>
+                                    <form action="#" th:action="'/tickets/add/' + ${flight.getFlightId()}" th:method="get">
+                                        <button type="submit" class="btn btn-md btn-success mx-2" value="Купить">Купить</button>
+                                    </form>
+                                    <a th:href="'/flights/edit/' + ${flight.getFlightId()}">
+                                        <button class="btn btn-md btn-warning mx-2" th:text="Редактировать"></button>
+                                    </a>
+                                    <form action="#" th:action="'/flights/delete/' + ${flight.getFlightId()}" th:method="delete">
+                                        <button type="submit" class="btn btn-md btn-danger" value="Удалить">Удалить</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

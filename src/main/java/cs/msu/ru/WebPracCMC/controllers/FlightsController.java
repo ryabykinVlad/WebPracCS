@@ -25,7 +25,7 @@ public class FlightsController {
     @Autowired
     private final AirlinesDAO airlinesDAO = new AirlinesDAOImpl();
 
-    @GetMapping(value = {"/", "/flights"})
+    @GetMapping(value = {"/", "/flights", "/flights/"})
     public String flights_page(Model model,
                                @RequestParam(name = "departureAirport", required = false) String departureAirport,
                                @RequestParam(name = "arrivalAirport", required = false) String arrivalAirport,
