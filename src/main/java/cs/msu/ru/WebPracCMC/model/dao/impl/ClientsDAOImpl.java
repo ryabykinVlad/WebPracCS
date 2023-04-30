@@ -2,11 +2,6 @@ package cs.msu.ru.WebPracCMC.model.dao.impl;
 
 import cs.msu.ru.WebPracCMC.model.dao.ClientsDAO;
 import cs.msu.ru.WebPracCMC.model.entity.Clients;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -22,37 +17,39 @@ public class ClientsDAOImpl extends GenericDAOImpl<Clients>
 
     @Override
     public Collection<Clients> getClientsByFilter(Filter filter) {
-        try (Session session = openSession()) {
-            session.beginTransaction();
-            CriteriaBuilder builder = session.getCriteriaBuilder();
-            CriteriaQuery<Clients> criteriaQuery = builder.createQuery(Clients.class);
-            Root<Clients> root = criteriaQuery.from(Clients.class);
-
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (filter.getId() != null) {
-                predicates.add(builder.equal(root.get("clientId"), filter.getId()));
+        List<Clients> result = this.getAll().stream().toList();
+        if (filter.getId() != null) {
+            List<Clients> filteredResult = new ArrayList<>();
+            for (Clients client: result) {
+                if (client.getClientId() == filter.getId()) {
+                    filteredResult.add(client);
+                }
             }
-            if (filter.getFullName() != null && !filter.getFullName().isBlank()) {
-                String pattern = getPattern(filter.getFullName());
-                predicates.add(builder.like(root.get("fullName"), pattern));
-            }
-            if (filter.getPreferredCity() != null && !filter.getPreferredCity().isBlank()) {
-                String pattern = getPattern(filter.getPreferredCity());
-                predicates.add(builder.like(root.get("preferredCity"), pattern));
-            }
-
-            if (!predicates.isEmpty()) {
-                criteriaQuery.where(predicates.toArray(new Predicate[0]));
-            }
-
-            List<Clients> result = session.createQuery(criteriaQuery).getResultList();
-            session.getTransaction().commit();
-            return result;
+            result = filteredResult;
         }
-    }
-
-    private String getPattern(String string) {
-        return "%" + string + "%";
+        if (filter.getFullName() != null && !filter.getFullName().isBlank()) {
+            List<Clients> filteredResult = new ArrayList<>();
+            for (Clients client: result) {
+                String fullName = client.getFullName().toLowerCase();
+                if (fullName.contains(filter.getFullName().toLowerCase())) {
+                    filteredResult.add(client);
+                }
+            }
+            result = filteredResult;
+        }
+        if (filter.getPreferredCity() != null && !filter.getPreferredCity().isBlank()) {
+            List<Clients> filteredResult = new ArrayList<>();
+            for (Clients client: result) {
+                if (client.getPreferredCity() == null) {
+                    continue;
+                }
+                String preferredCity = client.getPreferredCity().toLowerCase();
+                if (preferredCity.contains(filter.getPreferredCity().toLowerCase())) {
+                    filteredResult.add(client);
+                }
+            }
+            result = filteredResult;
+        }
+        return result;
     }
 }

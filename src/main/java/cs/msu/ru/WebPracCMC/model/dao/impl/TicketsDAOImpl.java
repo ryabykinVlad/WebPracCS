@@ -1,6 +1,9 @@
 package cs.msu.ru.WebPracCMC.model.dao.impl;
 
+import cs.msu.ru.WebPracCMC.model.dao.FlightsDAO;
 import cs.msu.ru.WebPracCMC.model.dao.TicketsDAO;
+import cs.msu.ru.WebPracCMC.model.entity.Clients;
+import cs.msu.ru.WebPracCMC.model.entity.Flights;
 import cs.msu.ru.WebPracCMC.model.entity.Tickets;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -59,5 +62,20 @@ public class TicketsDAOImpl extends GenericDAOImpl<Tickets>
 
             return result;
         }
+    }
+
+    @Override
+    public void buyTicket(TicketsDAO ticketsDAO, FlightsDAO flightsDAO, Flights flight, Clients client, Double purchasePrice, LocalDateTime purchaseTime) {
+        if (flight.getAvailableSeats() <= 0) {
+            throw new RuntimeException("No available seats. Can not buy a ticket");
+        }
+        Tickets ticket = new Tickets();
+        ticket.setFlightId(flight);
+        ticket.setClientId(client);
+        ticket.setPurchasePrice(purchasePrice);
+        ticket.setPurchaseTime(purchaseTime);
+        flight.setAvailableSeats(flight.getAvailableSeats() - 1);
+        flightsDAO.update(flight);
+        ticketsDAO.save(ticket);
     }
 }

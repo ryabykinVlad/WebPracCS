@@ -69,7 +69,7 @@
                                     <form action="#" th:action="'/flights/' + ${flight.getFlightId()}" th:method="get">
                                         <button type="submit" class="btn btn-md btn-info" value="Подробнее">Подробнее</button>
                                     </form>
-                                    <form action="#" th:action="'/tickets/add/' + ${flight.getFlightId()}" th:method="get">
+                                    <form action="#" th:action="'/tickets/buy/' + ${flight.getFlightId()}" th:method="get">
                                         <button type="submit" class="btn btn-md btn-success mx-2" value="Купить">Купить</button>
                                     </form>
                                     <a th:href="'/flights/edit/' + ${flight.getFlightId()}">
